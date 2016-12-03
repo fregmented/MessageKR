@@ -36,7 +36,7 @@ import me.kudryavka.messagekr.PhoneEx;
  * Created by seyriz on 2016. 12. 3..
  */
 
-class MMS {
+public class MMS {
 
     private static final String TAG = "MMS";
 
@@ -92,7 +92,7 @@ class MMS {
         }
     }
 
-    protected int beginMmsConnectivity() throws IOException {
+    public int beginMmsConnectivity() throws IOException {
         // Take a wake lock so we don't fall asleep before the message is downloaded.
         createWakeLock();
 
@@ -122,11 +122,13 @@ class MMS {
                             .addCapability(NetworkCapabilities.NET_CAPABILITY_MMS)
                             .setNetworkSpecifier(Integer.toString(MessageService.getDefaultSubscriptionId()))
                             .build();
-                } else {
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                     request = new NetworkRequest.Builder()
                             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                             .addCapability(NetworkCapabilities.NET_CAPABILITY_MMS)
                             .build();
+                } else {
+                    throw new IllegalStateException("This clause never running");
                 }
             } else {
                 request = new NetworkRequest.Builder()
@@ -160,7 +162,7 @@ class MMS {
         return PhoneEx.APN_REQUEST_STARTED;
     }
 
-    protected void endMmsConnectivity() {
+    public void endMmsConnectivity() {
         // End the connectivity
         try {
             Log.v(TAG, "endMmsConnectivity");

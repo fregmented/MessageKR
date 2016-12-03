@@ -68,7 +68,7 @@ public class APNHelper {
     private void checkCurrentApn(){
         String[] network = getCarrierAndNetworkType();
 
-        switch (network[0].toUpperCase()){
+        switch (network[0].toUpperCase(Locale.ENGLISH)){
             case "OLLEH":
             case "KT":
                 switch (network[1]){

@@ -15,10 +15,11 @@ package com.nokia;
 
 public class MMEncoderException extends Exception {
 
-  public MMEncoderException(String errormsg) {
-    super(errormsg);
-  }
 
-  }
+    public MMEncoderException(String errormsg) {
+        super(errormsg);
+    }
+
+}
 
 

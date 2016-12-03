@@ -66,7 +66,7 @@ public interface PhoneEx {
      * APN types for data connections.  These are usage categories for an APN
      * entry.  One APN entry may support multiple APN types, eg, a single APN
      * may service regular internet traffic ("default") as well as MMS-specific
-     * connections.<br/>
+     * connections.<br>
      * APN_TYPE_ALL is a special type to indicate that this APN entry can
      * service all data connections.
      */

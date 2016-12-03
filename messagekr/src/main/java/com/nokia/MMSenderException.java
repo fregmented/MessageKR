@@ -12,11 +12,8 @@ package com.nokia;
  *
  */
 
-
 public class MMSenderException extends Exception {
-
-  public MMSenderException(String errormsg) {
-    super(errormsg);
-  }
-
+    public MMSenderException(String errormsg) {
+        super(errormsg);
+    }
 }

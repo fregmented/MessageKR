@@ -32,8 +32,8 @@ public class MMAddress implements IMMConstants, Serializable {
   /**
    * Creates a MM address specifying the address and the type.
    *
-   * param addr the string representing the address
-   * param type the type of the address. It can be:
+   * @param addr the string representing the address
+   * @param type the type of the address. It can be:
    * ADDRESS_TYPE_UNKNOWN, ADDRESS_TYPE_PLMN,ADDRESS_TYPE_IPV4,
    * ADDRESS_TYPE_IPV6, ADDRESS_TYPE_EMAIL 
    *
@@ -54,8 +54,8 @@ public class MMAddress implements IMMConstants, Serializable {
   /**
    * Sets MM address value specifying the address and the type.
    *
-   * param addr the string representing the address
-   * param type the type of the address. It can be:
+   * @param addr the string representing the address
+   * @param type the type of the address. It can be:
    * ADDRESS_TYPE_UNKNOWN, ADDRESS_TYPE_PLMN,ADDRESS_TYPE_IPV4,
    * ADDRESS_TYPE_IPV6, ADDRESS_TYPE_EMAIL 
    *
@@ -69,7 +69,7 @@ public class MMAddress implements IMMConstants, Serializable {
 
   /**
    * Retrieves the MM address value.
-   *
+   * @return Address
    */
   public String getAddress() {
     return address;
@@ -78,7 +78,7 @@ public class MMAddress implements IMMConstants, Serializable {
   /**
    * Retrieves the MM address value in the full format. For example: +358990000066/TYPE=PLMN,
    * joe@user.org, 1.2.3.4/TYPE=IPv4
-   *
+   * @return Full Address
    */
   public String getFullAddress() {
     switch (type) {
@@ -94,8 +94,9 @@ public class MMAddress implements IMMConstants, Serializable {
    *
    * return the type of the address. It can be:
    * ADDRESS_TYPE_UNKNOWN, ADDRESS_TYPE_PLMN,ADDRESS_TYPE_IPV4,
-   * ADDRESS_TYPE_IPV6, ADDRESS_TYPE_EMAIL 
-   *
+   * ADDRESS_TYPE_IPV6, ADDRESS_TYPE_EMAIL
+   * @see IMMConstants
+   * @return Address Type
    */
   public byte getType() {
     return type;
