@@ -1,5 +1,7 @@
 # MessagingKR
 
+[ ![Download](https://api.bintray.com/packages/seyriz/kudryavka/MessageKR/images/download.svg) ](https://bintray.com/seyriz/kudryavka/MessageKR/_latestVersion)
+
 MessageKR is SMS and MMS sender for korean Telecom providers.
 
 This project inspired by [AndroidMMS](https://github.com/kakopappa/AndroidMMS)
