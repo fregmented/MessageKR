@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    testCompile 'junit:junit:4.12'
+}
+
+publish {
+    // ./gradlew clean build bintrayUpload -PdryRun=false
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    userOrg = 'seyriz'
+    repoName = 'BlueCon'
+    groupId = 'me.kudryavka'
+    artifactId = 'bluecon'
+    publishVersion = '0.2.1'
+    desc = 'BlueCon - Android BT SPP Server & Client Library'
+    website = 'https://github.com/seyriz/Me'
+    bintrayUser = 'seyriz'
+    bintrayKey = properties.getProperty("bintray.apiKey")
+    dryRun = false
+}
