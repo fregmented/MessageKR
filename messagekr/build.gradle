@@ -35,12 +35,12 @@ dependencies {
 }
 
 publish {
-    // ./gradlew clean build bintrayUpload -PdryRun=false
+    // ./gradlew clean build bintrayUpload -PdryRun=false -PbintrayKey=[API_KEY]
     userOrg = 'seyriz'
     repoName = 'kudryavka'
     groupId = 'me.kudryavka'
     artifactId = 'MessageKR'
-    publishVersion = '0.0.1-ALPHA'
+    publishVersion = '1.0.1'
     desc = 'MessageKR is SMS and MMS sender for Android phone using in Korea'
     website = 'https://github.com/seyriz/MessageKR'
     bintrayUser = 'seyriz'

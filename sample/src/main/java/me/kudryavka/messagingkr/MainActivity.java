@@ -3,6 +3,7 @@ package me.kudryavka.messagingkr;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -84,41 +86,26 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> getRequestNeededPermission() {
         permissions = new ArrayList<>();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_PHONE_STATE);
-        }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.SEND_SMS);
         }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_SMS);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_PHONE_STATE);
         }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.RECEIVE_SMS);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_MMS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.RECEIVE_MMS);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_CONTACTS);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.GET_ACCOUNTS);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
         return permissions;
+    }
+
+    public String getMyPhoneNumber(Context context) {
+        TelephonyManager mTelephonyMgr;
+        mTelephonyMgr = (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+        return mTelephonyMgr.getLine1Number();
     }
 
     void send(){
         messageService = new MessageService(this);
-        messageService.sendMessage(MessageService.getMyPhoneNumber(this), "THIS IS SMS TEST", null);
-        messageService.sendMessage(MessageService.getMyPhoneNumber(this), "THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;", null);
+        messageService.sendMessage(getMyPhoneNumber(this), "THIS IS SMS TEST", null);
+        messageService.sendMessage(getMyPhoneNumber(this), "THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;", null);
         getImage();
     }
 
@@ -165,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     uri = data.getData();
                     Log.d("GET_IMAGE", uri.toString());
-                    messageService.sendMessage(MessageService.getMyPhoneNumber(this), "THIS IS MMS TEST", uri);
+                    messageService.sendMessage(getMyPhoneNumber(this), "THIS IS MMS TEST", uri);
                 }
             }
         }

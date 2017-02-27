@@ -80,14 +80,6 @@ public class MessageService{
         }
     }
 
-    public static String getMyPhoneNumber(Context context) {
-        TelephonyManager mTelephonyMgr;
-        mTelephonyMgr = (TelephonyManager)
-                context.getSystemService(Context.TELEPHONY_SERVICE);
-//        return mTelephonyMgr.getLine1Number();
-        return "01030522969";
-    }
-
     public Bitmap getBitmapFromUri(Uri uri) {
         ParcelFileDescriptor parcelFileDescriptor = null;
         try {
