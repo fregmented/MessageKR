@@ -14,19 +14,21 @@ import android.text.TextUtils;
 
 public class APNHelper {
 
-    public static APN currentAPN;
+    private static APN currentAPN;
+
+    private static APNHelper instance;
 
     /**
      * APN정보를 담고 있습니다.
      * 통신사에 따라 달라집니다.
      */
     public class APN {
-        public String APN = "";
-        public String MMSCenterUrl = "";
-        public int MMSPort = 0;
-        public String MMSProxy = "";
+        private String APN = "";
+        private String MMSCenterUrl = "";
+        private int MMSPort = 0;
+        private String MMSProxy = "";
 
-        public APN(String Apn, String MMSCenterUrl, int MMSPort, String MMSProxy) {
+        private APN(String Apn, String MMSCenterUrl, int MMSPort, String MMSProxy) {
             this.APN = Apn;
             this.MMSCenterUrl = MMSCenterUrl;
             this.MMSPort = MMSPort;
@@ -42,10 +44,34 @@ public class APNHelper {
                     MMSPort,
                     MMSProxy);
         }
+
+        public String getAPN() {
+            return APN;
+        }
+
+        public String getMMSCenterUrl() {
+            return MMSCenterUrl;
+        }
+
+        public int getMMSPort() {
+            return MMSPort;
+        }
+
+        public String getMMSProxy() {
+            return MMSProxy;
+        }
     }
 
-    public APNHelper(final Context context) {
+    public static APNHelper getInstance(Context ctx) {
+        if(instance == null) {
+            instance = new APNHelper(ctx);
+        }
+        return instance;
+    }
+
+    private APNHelper(final Context context) {
         this.context = context;
+        getMMSApns();
     }
 
     /**

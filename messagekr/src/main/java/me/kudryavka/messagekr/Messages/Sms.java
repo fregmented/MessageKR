@@ -1,4 +1,4 @@
-package me.kudryavka.messagekr;
+package me.kudryavka.messagekr.Messages;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -15,15 +15,15 @@ import java.util.ArrayList;
  * Created by seyriz on 2016. 12. 3..
  */
 
-class SMS {
+public class Sms {
     private static final String TAG = "SMS";
     private Context mContext;
-    private String mReceiver;
+    private ArrayList<String> mReceiveNumbers;
     private String mMessageText;
 
-    public SMS(Context mContext, String mReceiver, String mMessageText) {
+    public Sms(Context mContext, ArrayList<String> mReceiver, String mMessageText) {
         this.mContext = mContext;
-        this.mReceiver = mReceiver;
+        this.mReceiveNumbers = mReceiver;
         this.mMessageText = mMessageText;
     }
 
@@ -47,10 +47,14 @@ class SMS {
                 sentPIs.add(sentPI);
                 deliveredPIs.add(deliveredPI);
             }
-            sms.sendMultipartTextMessage(mReceiver, null, msgs, sentPIs, deliveredPIs);
+            for(String number : mReceiveNumbers) {
+                sms.sendMultipartTextMessage(number, null, msgs, sentPIs, deliveredPIs);
+            }
         }
         else {
-            sms.sendTextMessage(mReceiver, null, mMessageText, sentPI, deliveredPI);
+            for(String number : mReceiveNumbers) {
+                sms.sendTextMessage(number, null, mMessageText, sentPI, deliveredPI);
+            }
         }
     }
 }

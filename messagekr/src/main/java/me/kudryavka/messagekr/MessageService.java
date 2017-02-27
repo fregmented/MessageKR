@@ -6,18 +6,16 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
 
-import me.kudryavka.messagekr.MMS.MMS;
+import me.kudryavka.messagekr.Messages.Mms;
+import me.kudryavka.messagekr.Messages.Sms;
 
 /**
  * Created by seyriz on 2016. 12. 3..
@@ -28,7 +26,7 @@ public class MessageService{
     private static final String TAG = "MessageService";
 
     private Context mContext;
-    private String mReceiver;
+    private ArrayList<String> mReceiveNumbers;
     private String mMessageText;
     private Uri mImageUri;
     private ConnectivityManager mConnMgr;
@@ -41,8 +39,6 @@ public class MessageService{
     private NetworkInfo mOtherNetworkInfo;
 
     private ConnectivityManager.NetworkCallback networkCallback;
-
-    private MMS mms;
 
     public enum State {
         UNKNOWN,
@@ -57,32 +53,30 @@ public class MessageService{
 
     }
 
-    public void sendMessage(String receiver, String messageText, @Nullable Uri imageUri){
-        this.mReceiver = receiver;
+    public void sendMessage(String receiveNumber, String messageText, Uri imageUri){
+        this.mReceiveNumbers = new ArrayList<>();
+        this.mReceiveNumbers.add(receiveNumber);
+
+        this.mMessageText = messageText;
+        this.mImageUri = imageUri;
+        send();
+    }
+
+    public void sendMessage(ArrayList<String> receiveNumbers, String messageText, Uri imageUri){
+        this.mReceiveNumbers = receiveNumbers;
         this.mMessageText = messageText;
         this.mImageUri = imageUri;
         send();
     }
 
     private void send(){
-        try {
-            if(mImageUri!=null) {
-                new MMS(mContext, mMessageText, mReceiver, mImageUri, mConnMgr).beginMmsConnectivity();
-            }
-            else {
-                new SMS(mContext, mReceiver, mMessageText).send();
-            }
+        if(mImageUri!=null) {
+            Log.w(TAG, "MMS");
+            new Mms(mContext, mReceiveNumbers, mMessageText, getBitmapFromUri(mImageUri)).send();
         }
-        catch (IOException e){
-            Log.e(TAG, e.getMessage(), e);
-        }
-    }
-
-    public static int getDefaultSubscriptionId() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            return SmsManager.getDefaultSmsSubscriptionId();
-        } else {
-            return 1;
+        else {
+            Log.w(TAG, "SMS");
+            new Sms(mContext, mReceiveNumbers, mMessageText).send();
         }
     }
 
@@ -90,37 +84,11 @@ public class MessageService{
         TelephonyManager mTelephonyMgr;
         mTelephonyMgr = (TelephonyManager)
                 context.getSystemService(Context.TELEPHONY_SERVICE);
-        return mTelephonyMgr.getLine1Number();
+//        return mTelephonyMgr.getLine1Number();
+        return "01030522969";
     }
 
-
-
-    /**
-     * are we set up to use wifi? if so, send mms over it.
-     */
-    public static boolean useWifi(Context context) {
-        if (isMmsOverWifiEnabled(context)) {
-            ConnectivityManager mConnMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (mConnMgr != null) {
-                NetworkInfo niWF = mConnMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                if ((niWF != null) && (niWF.isConnected())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Determins whether or not the app has enabled MMS over WiFi
-     * @param context
-     * @return true if enabled
-     */
-    public static boolean isMmsOverWifiEnabled(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("mms_over_wifi", false);
-    }
-
-    public static Bitmap getBitmapFromUri(Context mContext, Uri uri) {
+    public Bitmap getBitmapFromUri(Uri uri) {
         ParcelFileDescriptor parcelFileDescriptor = null;
         try {
             parcelFileDescriptor = mContext.getContentResolver().openFileDescriptor(uri, "r");
@@ -141,6 +109,5 @@ public class MessageService{
             }
         }
     }
-
 
 }

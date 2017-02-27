@@ -82,6 +82,7 @@ public interface PhoneEx {
     /**
      * Return codes for <code>enableApnType()</code>
      */
+    static final int APN_START_FAILED       = -1;
     static final int APN_ALREADY_ACTIVE     = 0;
     static final int APN_REQUEST_STARTED    = 1;
     static final int APN_TYPE_NOT_AVAILABLE = 2;
