@@ -70,6 +70,7 @@ SMS와 MMS를 전송하기 위해 필요한 최소한의 권한입니다.
 - [x] MMS sender(under Android L)
 - [x] MMS sender(above Android L)
 - [x] permission cleanup
+- [ ] GIF transmitting
 - [ ] test
 
 ## Tested Phone
