@@ -29,53 +29,33 @@ public class MessageService{
     private ArrayList<String> mReceiveNumbers;
     private String mMessageText;
     private Uri mImageUri;
-    private ConnectivityManager mConnMgr;
 
-    private State mState;
-    private boolean mListening;
-    private boolean mSending;
-
-    private NetworkInfo mNetworkInfo;
-    private NetworkInfo mOtherNetworkInfo;
-
-    private ConnectivityManager.NetworkCallback networkCallback;
-
-    public enum State {
-        UNKNOWN,
-        CONNECTED,
-        NOT_CONNECTED
-    }
-
-
-    public MessageService(Context ctx) {
+    public MessageService(Context ctx, String receiveNumber, String messageText, Uri imageUri) {
         this.mContext = ctx;
-        mConnMgr = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    }
-
-    public void sendMessage(String receiveNumber, String messageText, Uri imageUri){
         this.mReceiveNumbers = new ArrayList<>();
         this.mReceiveNumbers.add(receiveNumber);
 
         this.mMessageText = messageText;
         this.mImageUri = imageUri;
-        send();
     }
 
-    public void sendMessage(ArrayList<String> receiveNumbers, String messageText, Uri imageUri){
+    public MessageService(Context ctx, ArrayList<String> receiveNumbers, String messageText, Uri imageUri) {
+        this.mContext = ctx;
+
         this.mReceiveNumbers = receiveNumbers;
+
         this.mMessageText = messageText;
         this.mImageUri = imageUri;
-        send();
     }
 
-    private void send(){
-        if(mImageUri!=null) {
-            Log.w(TAG, "MMS");
+    public void send(){
+        if(mImageUri!=null && !mImageUri.equals(Uri.EMPTY)) {
+            Log.w(TAG, String.format("MMS %s %s %s", mReceiveNumbers, mMessageText, mImageUri));
             new Mms(mContext, mReceiveNumbers, mMessageText, getBitmapFromUri(mImageUri)).send();
         }
         else {
-            Log.w(TAG, "SMS");
+            Log.w(TAG, String.format("SMS %s %s", mReceiveNumbers, mMessageText));
             new Sms(mContext, mReceiveNumbers, mMessageText).send();
         }
     }

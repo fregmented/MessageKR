@@ -57,8 +57,7 @@ SMS와 MMS를 전송하기 위해 필요한 최소한의 권한입니다.
 ```
 
 ```java
-    MessageService messageService = new MessageService(this);
-    messageService.sendMessage(MessageService.getMyPhoneNumber(this), "THIS IS SMS TEST", null);
+    new MessageService(this, MessageService.getMyPhoneNumber(this), "THIS IS SMS TEST", null).send();
 ```
 
 

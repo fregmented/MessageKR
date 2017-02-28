@@ -40,7 +40,7 @@ publish {
     repoName = 'kudryavka'
     groupId = 'me.kudryavka'
     artifactId = 'MessageKR'
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.2'
     desc = 'MessageKR is SMS and MMS sender for Android phone using in Korea'
     website = 'https://github.com/seyriz/MessageKR'
     bintrayUser = 'seyriz'

@@ -32,9 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_PERMISSIONS_WRITE_SETTING = 202;
     private static final int SAF_REQ_CODE = 123;
 
-
-    MessageService messageService;
-
     private ArrayList<String> permissions;
 
     @Override
@@ -103,9 +100,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void send(){
-        messageService = new MessageService(this);
-        messageService.sendMessage(getMyPhoneNumber(this), "THIS IS SMS TEST", null);
-        messageService.sendMessage(getMyPhoneNumber(this), "THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;", null);
+        new MessageService(this, getMyPhoneNumber(this), "THIS IS SMS TEST", null).send();
+        new MessageService(this, getMyPhoneNumber(this), "THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;", null).send();
         getImage();
     }
 
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     uri = data.getData();
                     Log.d("GET_IMAGE", uri.toString());
-                    messageService.sendMessage(getMyPhoneNumber(this), "THIS IS MMS TEST", uri);
+                    new MessageService(this, getMyPhoneNumber(this), "THIS IS MMS TEST", uri);
                 }
             }
         }
