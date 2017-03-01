@@ -23,6 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="me.kudryavka.messagekr.BroadcastReceiver.SmsDeliveredBroadcastReceiver">
+            <intent-filter>
+                <action android:name="me.kudryavka.messagekr.SMS_DELIVERED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="me.kudryavka.messagekr.BroadcastReceiver.SmsSentBroadcastReceiver">
+            <intent-filter>
+                <action android:name="me.kudryavka.messagekr.SMS_SENT"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

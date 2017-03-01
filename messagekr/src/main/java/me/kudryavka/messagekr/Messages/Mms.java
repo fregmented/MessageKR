@@ -52,7 +52,6 @@ public class Mms {
     }
 
     public static final String ENCODING_EUC_KR = "euc-kr";
-    public static final String ENCODING_UTF_8 = "utf-8";
 
     public String mCurrentEncoding = ENCODING_EUC_KR;
 
@@ -302,7 +301,14 @@ public class Mms {
 
         mMmMessage.setMessageClass(IMMConstants.MESSAGE_CLASS_PERSONAL);
         mMmMessage.setPriority(IMMConstants.PRIORITY_LOW);
-        mMmMessage.setContentType(IMMConstants.CT_APPLICATION_MULTIPART_MIXED);
+
+        String carrier = APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0];
+        if(carrier.equals(APNHelper.CARRIER_LG)) {
+            mMmMessage.setContentType(IMMConstants.CT_APPLICATION_MMS_MESSAGE);
+        }
+        else {
+            mMmMessage.setContentType(IMMConstants.CT_APPLICATION_MULTIPART_MIXED);
+        }
     }
 
     private void setMessageContents() throws UnsupportedEncodingException{
@@ -314,20 +320,24 @@ public class Mms {
         // 사진크기 고정
         options.inScaled = false;
 
-        mAttachedImage.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
+        if(mAttachedImage != null) {
+            mAttachedImage.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
 
-        MMContent part1 = new MMContent();
-        byte[] buffer1 = byteArrayOutputStream.toByteArray();
+            MMContent part1 = new MMContent();
+            byte[] buffer1 = byteArrayOutputStream.toByteArray();
 
-        part1.setContent(buffer1, 0, buffer1.length);
-        part1.setContentId("<0>");
+            part1.setContent(buffer1, 0, buffer1.length);
+            part1.setContentId("<0>");
 
-        // TODO : GIF 첨부 기능 추가
-        part1.setType(IMMConstants.CT_IMAGE_PNG);
+            // TODO : GIF 첨부 기능 추가
+            part1.setType(IMMConstants.CT_IMAGE_PNG);
+
+            mMmMessage.addContent(part1);
+        }
 
         MMContent part2 = new MMContent();
-        if(APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0].equalsIgnoreCase("OLLEH") ||
-                APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0].equalsIgnoreCase("KT")) {
+        String carrier = APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0];
+        if(carrier.equals(APNHelper.CARRIER_KT)) {
             mMessageString = mMessageString.replaceAll("\n", "<br>");
             part2.setType(IMMConstants.CT_TEXT_HTML);
         }
@@ -339,7 +349,6 @@ public class Mms {
         part2.setContent(buffer2, 0, buffer2.length);
         part2.setContentId("<1>");
 
-        mMmMessage.addContent(part1);
         mMmMessage.addContent(part2);
 
     }

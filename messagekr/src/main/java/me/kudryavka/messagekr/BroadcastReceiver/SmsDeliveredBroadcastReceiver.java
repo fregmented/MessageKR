@@ -12,6 +12,7 @@ import android.util.Log;
 
 public class SmsDeliveredBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsDeliveredBroadcastReceiver";
+    public static final int REQ_CODE = 123;
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             switch (getResultCode())

@@ -11,6 +11,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import me.kudryavka.messagekr.BroadcastReceiver.SmsDeliveredBroadcastReceiver;
+import me.kudryavka.messagekr.BroadcastReceiver.SmsSentBroadcastReceiver;
+
 /**
  * Created by seyriz on 2016. 12. 3..
  */
@@ -37,14 +40,16 @@ public class Sms {
     }
 
     public void send(){
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
 
-        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0,
-                new Intent(SENT), 0);
+        Intent sentIntent = new Intent("me.kudryavka.messagekr.BroadcastReceiver.SmsSentBroadcastReceiver");
+        sentIntent.setAction("me.kudryavka.messagekr.SMS_DELIVERED");
+        Intent deliveredIntent = new Intent("me.kudryavka.messagekr.BroadcastReceiver.SmsDeliveredBroadcastReceiver");
+        deliveredIntent.setAction("me.kudryavka.messagekr.SMS_SENT");
+        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, SmsSentBroadcastReceiver.REQ_CODE,
+                sentIntent, 0);
 
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(mContext, 0,
-                new Intent(DELIVERED), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(mContext, SmsDeliveredBroadcastReceiver.REQ_CODE,
+                deliveredIntent, 0);
 
 
         SmsManager sms = SmsManager.getDefault();

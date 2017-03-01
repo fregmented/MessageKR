@@ -13,7 +13,9 @@ import android.util.Log;
 
 public class SmsSentBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsSentBroadcastReceiver";
-    public void onReceive(Context arg0, Intent arg1) {
+    public static final int REQ_CODE = 122;
+
+    public void onReceive(Context context, Intent intent) {
         switch (getResultCode())
         {
             case Activity.RESULT_OK:
