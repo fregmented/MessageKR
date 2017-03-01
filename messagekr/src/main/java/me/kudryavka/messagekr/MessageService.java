@@ -29,6 +29,7 @@ public class MessageService{
     private ArrayList<String> mReceiveNumbers;
     private String mMessageText;
     private Uri mImageUri;
+    private String mMessageSubject;
 
     public MessageService(Context ctx, String receiveNumber, String messageText, Uri imageUri) {
         this.mContext = ctx;
@@ -36,6 +37,7 @@ public class MessageService{
         this.mReceiveNumbers = new ArrayList<>();
         this.mReceiveNumbers.add(receiveNumber);
 
+        this.mMessageSubject = "";
         this.mMessageText = messageText;
         this.mImageUri = imageUri;
     }
@@ -45,18 +47,52 @@ public class MessageService{
 
         this.mReceiveNumbers = receiveNumbers;
 
+        this.mMessageSubject = "";
+        this.mMessageText = messageText;
+        this.mImageUri = imageUri;
+    }
+
+    public MessageService(Context ctx, String receiveNumber, String messageSubject, String messageText, Uri imageUri) {
+        this.mContext = ctx;
+
+        this.mReceiveNumbers = new ArrayList<>();
+        this.mReceiveNumbers.add(receiveNumber);
+
+        this.mMessageSubject = messageSubject;
+        this.mMessageText = messageText;
+        this.mImageUri = imageUri;
+    }
+
+    public MessageService(Context ctx, ArrayList<String> receiveNumbers, String messageSubject, String messageText, Uri imageUri) {
+        this.mContext = ctx;
+
+        this.mReceiveNumbers = receiveNumbers;
+
+        this.mMessageSubject = messageSubject;
         this.mMessageText = messageText;
         this.mImageUri = imageUri;
     }
 
     public void send(){
+        Log.d(TAG, "mImageUri:"+mImageUri);
         if(mImageUri!=null && !mImageUri.equals(Uri.EMPTY)) {
-            Log.w(TAG, String.format("MMS %s %s %s", mReceiveNumbers, mMessageText, mImageUri));
-            new Mms(mContext, mReceiveNumbers, mMessageText, getBitmapFromUri(mImageUri)).send();
+            Log.w(TAG, String.format("MMS [%s] %s: %s %s", mReceiveNumbers, mMessageSubject, mMessageText, mImageUri));
+            if(mMessageSubject == null || mMessageSubject.isEmpty()) {
+                new Mms(mContext, mReceiveNumbers, mMessageText, getBitmapFromUri(mImageUri)).send();
+            }
+            else {
+                new Mms(mContext, mReceiveNumbers, mMessageSubject, mMessageText, getBitmapFromUri(mImageUri)).send();
+            }
         }
         else {
-            Log.w(TAG, String.format("SMS %s %s", mReceiveNumbers, mMessageText));
-            new Sms(mContext, mReceiveNumbers, mMessageText).send();
+            Log.w(TAG, String.format("SMS [%s] %s: %s", mReceiveNumbers, mMessageSubject, mMessageText));
+
+            if(mMessageSubject == null || mMessageSubject.isEmpty()) {
+                new Sms(mContext, mReceiveNumbers, mMessageText).send();
+            }
+            else {
+                new Sms(mContext, mReceiveNumbers, mMessageSubject, mMessageText).send();
+            }
         }
     }
 

@@ -259,6 +259,7 @@ public class Mms {
             encoder.encodeMessage();
             byte[] out = encoder.getMessage();
             APNHelper.APN currentApn = APNHelper.getInstance(mContext).getMMSApns();
+            Log.e(TAG, "makeMmMessage::APN: " + currentApn);
             boolean isProxySetted = currentApn.getMMSProxy() != null || !currentApn.getMMSProxy().isEmpty();
             MMSender sender = new MMSender();
             sender.setMMSCURL(currentApn.getMMSCenterUrl());
@@ -271,8 +272,7 @@ public class Mms {
             else {
                 response = sender.send(out, isProxySetted, currentApn.getMMSProxy(), currentApn.getMMSPort(), network);
             }
-            Log.i(TAG, "makeMmMessage::MMSC: " + sender.getMMSCURL());
-            Log.i(TAG, "makeMmMessage::resp\nstatus: " + response.getResponseCode() + "\nmessage: " + response.getResponseMessage());
+            Log.e(TAG, "makeMmMessage::resp\nstatus: " + response.getResponseCode() + "\nmessage: " + response.getResponseMessage());
         }
         catch (MMEncoderException | MMSenderException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -292,7 +292,7 @@ public class Mms {
         mMmMessage.setDate(new Date(System.currentTimeMillis()));
 
         // '-'와 공백 제거
-        receiveNumber = receiveNumber.replaceAll("-", "").replaceAll(" ", "");
+        receiveNumber = receiveNumber.replaceAll("\\-", "").replaceAll(" ", "").replaceAll("\\+82", "0");
         mMmMessage.addToAddress(receiveNumber + "/TYPE=PLMN");
         mMmMessage.setDeliveryReport(true);
         mMmMessage.setReadReply(false);
@@ -326,16 +326,18 @@ public class Mms {
         part1.setType(IMMConstants.CT_IMAGE_PNG);
 
         MMContent part2 = new MMContent();
-        byte[] buffer2 = mMessageString.getBytes(mCurrentEncoding);
-        part2.setContent(buffer2, 0, buffer2.length);
-        part2.setContentId("<1>");
         if(APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0].equalsIgnoreCase("OLLEH") ||
                 APNHelper.getInstance(mContext).getCarrierAndNetworkType()[0].equalsIgnoreCase("KT")) {
+            mMessageString = mMessageString.replaceAll("\n", "<br>");
             part2.setType(IMMConstants.CT_TEXT_HTML);
         }
         else {
             part2.setType(IMMConstants.CT_TEXT_PLAIN + "; charset=\"" + mCurrentEncoding + "\";");
         }
+
+        byte[] buffer2 = mMessageString.getBytes(mCurrentEncoding);
+        part2.setContent(buffer2, 0, buffer2.length);
+        part2.setContentId("<1>");
 
         mMmMessage.addContent(part1);
         mMmMessage.addContent(part2);

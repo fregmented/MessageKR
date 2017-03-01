@@ -44,33 +44,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(this)) {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.write_settings_permission)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                            intent.setData(Uri.parse("package:" + getPackageName()));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            try {
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                Log.e("MainActivity", "error starting permission intent", e);
-                            }
-                        }
-                    })
-                    .show();
-        }
-        else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(this)) {
+//            new AlertDialog.Builder(this)
+//                    .setMessage(R.string.write_settings_permission)
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//                            intent.setData(Uri.parse("package:" + getPackageName()));
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//                            try {
+//                                startActivity(intent);
+//                            } catch (Exception e) {
+//                                Log.e("MainActivity", "error starting permission intent", e);
+//                            }
+//                        }
+//                    })
+//                    .show();
+//        }
+//        else {
             ArrayList<String> need_perm = getRequestNeededPermission();
             if (need_perm.size() == 0) {
                 send();
             } else {
                 ActivityCompat.requestPermissions(this, arrayListToStringArray(need_perm), REQ_PERMISSIONS);
             }
-        }
+//        }
     }
 
     public static String[] arrayListToStringArray(ArrayList<String> arrayList){
@@ -96,12 +96,10 @@ public class MainActivity extends AppCompatActivity {
         TelephonyManager mTelephonyMgr;
         mTelephonyMgr = (TelephonyManager)
                 context.getSystemService(Context.TELEPHONY_SERVICE);
-        return mTelephonyMgr.getLine1Number();
+        return mTelephonyMgr.getLine1Number().replace("+82", "0");
     }
 
     void send(){
-        new MessageService(this, getMyPhoneNumber(this), "THIS IS SMS TEST", null).send();
-        new MessageService(this, getMyPhoneNumber(this), "THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;THIS IS LMS TEST;", null).send();
         getImage();
     }
 
@@ -148,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     uri = data.getData();
                     Log.d("GET_IMAGE", uri.toString());
-                    new MessageService(this, getMyPhoneNumber(this), "THIS IS MMS TEST", uri);
+                    new MessageService(this, getMyPhoneNumber(this), "THIS IS SMS TEST\n한글?", null).send();
+                    new MessageService(this, getMyPhoneNumber(this), "MessageKR Test LMS", "LMS테스트\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\nTHIS IS LMS TEST\n", null).send();
+                    new MessageService(this, getMyPhoneNumber(this), "MessageKR Test MMS", "THIS IS MMS TEST\nTHIS IS MMS TEST\nTHIS IS MMS TEST\n한글??", uri).send();
                 }
             }
         }

@@ -20,10 +20,19 @@ public class Sms {
     private Context mContext;
     private ArrayList<String> mReceiveNumbers;
     private String mMessageText;
+    private String mMessageSubject;
 
     public Sms(Context mContext, ArrayList<String> mReceiver, String mMessageText) {
         this.mContext = mContext;
         this.mReceiveNumbers = mReceiver;
+        this.mMessageSubject = null;
+        this.mMessageText = mMessageText;
+    }
+
+    public Sms(Context mContext, ArrayList<String> mReceiver, String mMessageSubject, String mMessageText) {
+        this.mContext = mContext;
+        this.mReceiveNumbers = mReceiver;
+        this.mMessageSubject = mMessageSubject;
         this.mMessageText = mMessageText;
     }
 
@@ -48,12 +57,12 @@ public class Sms {
                 deliveredPIs.add(deliveredPI);
             }
             for(String number : mReceiveNumbers) {
-                sms.sendMultipartTextMessage(number, null, msgs, sentPIs, deliveredPIs);
+                sms.sendMultipartTextMessage(number, mMessageSubject, msgs, sentPIs, deliveredPIs);
             }
         }
         else {
             for(String number : mReceiveNumbers) {
-                sms.sendTextMessage(number, null, mMessageText, sentPI, deliveredPI);
+                sms.sendTextMessage(number, mMessageSubject, mMessageText, sentPI, deliveredPI);
             }
         }
     }

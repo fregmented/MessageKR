@@ -11,8 +11,13 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class APNHelper {
+
+    public static final String CARRIER_SK = "SK";
+    public static final String CARRIER_KT = "KT";
+    public static final String CARRIER_LG = "LG";
 
     private static APN currentAPN;
 
@@ -93,10 +98,9 @@ public class APNHelper {
      */
     private void checkCurrentApn(){
         String[] network = getCarrierAndNetworkType();
-
-        switch (network[0].toUpperCase(Locale.ENGLISH)){
-            case "OLLEH":
-            case "KT":
+        Log.e("APN", String.format("checkCurrentApn::CARRIER: %s NETWORK: %s", network[0], network[1]));
+        switch (network[0].toUpperCase(Locale.ENGLISH)) {
+            case CARRIER_KT:
                 switch (network[1]){
                     case "lte":
                         currentAPN = new APN("lte.ktfwing.com",
@@ -112,8 +116,7 @@ public class APNHelper {
                         break;
                 }
                 break;
-            case "SKTelecom":
-            case "SKT":
+            case CARRIER_SK:
                 switch (network[1]){
                     case "lte":
                         currentAPN = new APN("lte.sktelecom.com",
@@ -129,7 +132,7 @@ public class APNHelper {
                         break;
                 }
                 break;
-            case "LG U+":
+            case CARRIER_LG:
                 switch (network[1]){
                     case "lte":
                         currentAPN = new APN("internet.lguplus.co.kr",
@@ -152,7 +155,23 @@ public class APNHelper {
     public String[] getCarrierAndNetworkType(){
 
         TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        String carrierName = manager.getNetworkOperatorName();
+        String carrierName = "";
+        String mnc = manager.getNetworkOperator().substring(3);
+        switch (mnc) {
+            case "5":
+            case "05":
+            case "11":
+                carrierName = CARRIER_SK;
+                break;
+            case "6":
+            case "06":
+                carrierName = CARRIER_LG;
+                break;
+            case "8":
+            case "08":
+                carrierName = CARRIER_KT;
+                break;
+        }
         int networkType = manager.getNetworkType();
         switch (networkType){
             case TelephonyManager.NETWORK_TYPE_UMTS:
