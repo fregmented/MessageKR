@@ -13,7 +13,7 @@ MessageKR은 한국 통신사를 위한 SMS/MMS 래퍼입니다.
 ```groovy
 dependencies {
     ...
-    compile 'me.kudryavka:MessageKR:1.0.1'
+    compile 'me.kudryavka:MessageKR:1.0.4'
     ...
 }
 ```
